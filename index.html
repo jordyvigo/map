@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧭 Navegar a Cardroid Trujillo</title>
+    <title>🧭 Dirección Cardroid Trujillo</title>
     
     <!-- Open Graph para Facebook (Cuadrado 1080x1080) -->
     <meta property="og:title" content="🧭 Navegar a Cardroid Trujillo" />
@@ -163,23 +163,32 @@
         }
         
         function redirectToNavigation() {
-            const mapUrl = 'https://maps.app.goo.gl/ojGjsaX91uPFsnff8';
+            // Coordenadas de Cardroid Trujillo
+            const lat = '-8.0918983';
+            const lng = '-79.043029';
+            const placeName = 'Cardroid Trujillo';
+            
             const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
             const isAndroid = /Android/i.test(navigator.userAgent);
             
             if (isMobileDevice()) {
                 if (isAndroid) {
-                    window.location.href = 'google.navigation:q=' + encodeURIComponent(mapUrl);
+                    // Android: usa coordenadas con nombre personalizado
+                    window.location.href = 'google.navigation:q=' + lat + ',' + lng + '(' + encodeURIComponent(placeName) + ')';
                 } else if (isIOS) {
-                    window.location.href = 'comgooglemaps://?daddr=' + encodeURIComponent(mapUrl);
+                    // iOS: usa coordenadas con Google Maps app
+                    window.location.href = 'comgooglemaps://?daddr=' + lat + ',' + lng + '&q=' + encodeURIComponent(placeName);
+                    // Fallback a web si no tiene la app
                     setTimeout(() => {
-                        window.location.href = mapUrl;
+                        window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&destination_place_id=ChIJ-3lVx19frZERzVC5WZN-3Kg&travelmode=driving';
                     }, 1000);
                 } else {
-                    window.location.href = mapUrl;
+                    // Otros móviles: URL web con API
+                    window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&destination_place_id=ChIJ-3lVx19frZERzVC5WZN-3Kg&travelmode=driving';
                 }
             } else {
-                window.location.href = mapUrl;
+                // Desktop: URL web oficial con place_id
+                window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&destination_place_id=ChIJ-3lVx19frZERzVC5WZN-3Kg&travelmode=driving';
             }
         }
         
