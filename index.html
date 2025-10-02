@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧭 Navegar a Cardroid Trujillo</title>
+    <title>🧭 Direccióm Cardroid Trujillo</title>
     
     <!-- Open Graph para Facebook -->
     <meta property="og:title" content="🧭 Navegar a Cardroid Trujillo" />
@@ -191,9 +191,8 @@
             <div class="dot"></div>
         </div>
         
-        <button class="btn" onclick="goNow()">🧭 Iniciar Navegación</button>
+        <button class="btn" onclick="goMaps()">🧭 Iniciar Navegación</button>
         
-        <!-- Botón de llamada como LINK simple -->
         <a href="tel:+51932426069" class="btn btn-call">
             📞 Llamar Ahora
             <span class="phone-number">932 426 069</span>
@@ -206,48 +205,18 @@
         let count = 3;
         let timer = null;
         
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-        
-        function goNow() {
-            if (timer) {
-                clearInterval(timer);
-            }
+        function goMaps() {
+            if (timer) clearInterval(timer);
             
+            // Coordenadas de Cardroid Trujillo
             const lat = '-8.0918983';
             const lng = '-79.043029';
-            const name = 'Cardroid Trujillo';
-            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-            const isAndroid = /Android/i.test(navigator.userAgent);
             
-            if (isMobile()) {
-                if (isAndroid) {
-                    // Android: Intento 1 - Google Maps intent
-                    window.location.href = 'google.navigation:q=' + lat + ',' + lng + '(' + encodeURIComponent(name) + ')';
-                    
-                    // Fallback después de 1.5 segundos
-                    setTimeout(function() {
-                        window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=driving';
-                    }, 1500);
-                    
-                } else if (isIOS) {
-                    // iOS: Intento 1 - Google Maps app
-                    window.location.href = 'comgooglemaps://?daddr=' + lat + ',' + lng + '&q=' + encodeURIComponent(name);
-                    
-                    // Fallback después de 1 segundo
-                    setTimeout(function() {
-                        window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=driving';
-                    }, 1000);
-                    
-                } else {
-                    // Otros móviles
-                    window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=driving';
-                }
-            } else {
-                // Desktop
-                window.location.href = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=driving';
-            }
+            // URL simple de Google Maps con direcciones
+            const mapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=driving';
+            
+            // Simplemente abre la URL - Google Maps se encarga del resto
+            window.location.href = mapsUrl;
         }
         
         function startCount() {
@@ -257,17 +226,12 @@
                 count--;
                 if (count < 0) {
                     clearInterval(timer);
-                    goNow();
+                    goMaps();
                 }
             }, 1000);
         }
         
-        // Iniciar countdown
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', startCount);
-        } else {
-            startCount();
-        }
+        window.onload = startCount;
     </script>
     
     <!-- Vercel Analytics -->
