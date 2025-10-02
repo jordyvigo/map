@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧭 Navegar a Cardroid Trujillo</title>
+    
+    <!-- Open Graph para Facebook (Cuadrado 1080x1080) -->
+    <meta property="og:title" content="🧭 Navegar a Cardroid Trujillo" />
+    <meta property="og:description" content="Radios Android para tu auto 🚗 Toca para iniciar navegación GPS ⚡" />
+    <meta property="og:image" content="https://map.cardroid.pe/map-preview.gif" />
+    <meta property="og:image:type" content="image/gif" />
+    <meta property="og:image:width" content="1080" />
+    <meta property="og:image:height" content="1080" />
+    <meta property="og:url" content="https://map.cardroid.pe" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Cardroid Perú" />
+    <meta property="og:locale" content="es_PE" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="🧭 Navegar a Cardroid Trujillo" />
+    <meta name="twitter:image" content="https://map.cardroid.pe/map-preview.gif" />
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #fff;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 40px 20px;
+            max-width: 400px;
+        }
+        
+        .gps-icon {
+            font-size: 100px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+            filter: drop-shadow(0 0 20px rgba(251,191,36,0.6));
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.85; }
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.95;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+        
+        .countdown {
+            font-size: 56px;
+            font-weight: bold;
+            color: #fbbf24;
+            text-shadow: 0 0 30px rgba(251,191,36,0.7);
+            margin: 20px 0;
+            animation: countPulse 1s infinite;
+        }
+        
+        @keyframes countPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .dot {
+            width: 14px;
+            height: 14px;
+            background: #fff;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        
+        .dot:nth-child(1) { animation-delay: -0.32s; }
+        .dot:nth-child(2) { animation-delay: -0.16s; }
+        .dot:nth-child(3) { animation-delay: 0s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.2); }
+        }
+        
+        .btn-skip {
+            background: linear-gradient(45deg, #fbbf24, #f59e0b);
+            border: none;
+            color: #1e40af;
+            padding: 14px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(251,191,36,0.4);
+        }
+        
+        .btn-skip:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251,191,36,0.6);
+        }
+        
+        .info-text {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="gps-icon">🧭</div>
+        <h1>Iniciando Navegación</h1>
+        <p class="subtitle">Te llevamos a Cardroid Trujillo</p>
+        
+        <div class="countdown" id="countdown">3</div>
+        
+        <div class="loading-dots">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+        
+        <button class="btn-skip" onclick="skipCountdown()">⚡ Ir Ahora</button>
+        
+        <p class="info-text">Abriendo Google Maps GPS...</p>
+    </div>
+
+    <script>
+        let countdown = 3;
+        
+        function isMobileDevice() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+        
+        function redirectToNavigation() {
+            const mapUrl = 'https://maps.app.goo.gl/ojGjsaX91uPFsnff8';
+            const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+            const isAndroid = /Android/i.test(navigator.userAgent);
+            
+            if (isMobileDevice()) {
+                if (isAndroid) {
+                    window.location.href = 'google.navigation:q=' + encodeURIComponent(mapUrl);
+                } else if (isIOS) {
+                    window.location.href = 'comgooglemaps://?daddr=' + encodeURIComponent(mapUrl);
+                    setTimeout(() => {
+                        window.location.href = mapUrl;
+                    }, 1000);
+                } else {
+                    window.location.href = mapUrl;
+                }
+            } else {
+                window.location.href = mapUrl;
+            }
+        }
+        
+        function startCountdown() {
+            const countdownElement = document.querySelector('.countdown');
+            
+            const timer = setInterval(() => {
+                countdownElement.textContent = countdown;
+                countdown--;
+                
+                if (countdown < 0) {
+                    clearInterval(timer);
+                    redirectToNavigation();
+                }
+            }, 1000);
+        }
+        
+        window.onload = function() {
+            startCountdown();
+        };
+        
+        function skipCountdown() {
+            redirectToNavigation();
+        }
+    </script>
+</body>
+</html>
