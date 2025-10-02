@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🧭 Direccióm Cardroid Trujillo</title>
+    <title>🧭 Navegar a Cardroid Trujillo</title>
     
     <!-- Open Graph para Facebook -->
     <meta property="og:title" content="🧭 Navegar a Cardroid Trujillo" />
@@ -158,10 +158,31 @@
         
         .phone-number {
             display: block;
-            font-size: 19px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 900;
             margin-top: 8px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+        }
+        
+        .copied-alert {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .copied-alert.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
         }
         
         @media (max-width: 380px) {
@@ -170,10 +191,13 @@
             .brand { font-size: 28px; }
             .countdown { font-size: 56px; }
             .btn { font-size: 16px; padding: 14px 25px; }
+            .phone-number { font-size: 20px; }
         }
     </style>
 </head>
 <body>
+    <div class="copied-alert" id="copiedAlert">✅ Número copiado!</div>
+    
     <div class="container">
         <div class="gps-icon">🧭</div>
         
@@ -193,10 +217,10 @@
         
         <button class="btn" onclick="goMaps()">🧭 Iniciar Navegación</button>
         
-        <a href="tel:+51932426069" class="btn btn-call">
-            📞 Llamar Ahora
+        <button class="btn btn-call" onclick="copyPhone()">
+            📞 Copiar Número
             <span class="phone-number">932 426 069</span>
-        </a>
+        </button>
         
         <p class="info">Abriendo Google Maps GPS...</p>
     </div>
@@ -208,15 +232,55 @@
         function goMaps() {
             if (timer) clearInterval(timer);
             
-            // Coordenadas de Cardroid Trujillo
             const lat = '-8.0918983';
             const lng = '-79.043029';
-            
-            // URL simple de Google Maps con direcciones
             const mapsUrl = 'https://www.google.com/maps/dir/?api=1&destination=' + lat + ',' + lng + '&travelmode=driving';
             
-            // Simplemente abre la URL - Google Maps se encarga del resto
             window.location.href = mapsUrl;
+        }
+        
+        function copyPhone() {
+            const phoneNumber = '932426069';
+            
+            // Intenta copiar al portapapeles
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                // API moderna
+                navigator.clipboard.writeText(phoneNumber).then(function() {
+                    showCopiedAlert();
+                }).catch(function() {
+                    fallbackCopy(phoneNumber);
+                });
+            } else {
+                // Fallback para navegadores antiguos
+                fallbackCopy(phoneNumber);
+            }
+        }
+        
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showCopiedAlert();
+            } catch (err) {
+                alert('Número: ' + text + '\n\nCopia este número para llamar');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+        
+        function showCopiedAlert() {
+            const alert = document.getElementById('copiedAlert');
+            alert.classList.add('show');
+            
+            setTimeout(function() {
+                alert.classList.remove('show');
+            }, 2000);
         }
         
         function startCount() {
