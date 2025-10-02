@@ -6,7 +6,7 @@
     <title>🧭 Navegar a Cardroid Trujillo</title>
     
     <!-- Open Graph para Facebook -->
-    <meta property="og:title" content="🧭 Navegar a Cardroid Trujillo" />
+    <meta property="og:title" content="🧭 Direccion Cardroid Trujillo" />
     <meta property="og:description" content="Radios Android para tu auto 🚗 Toca para iniciar navegación GPS ⚡" />
     <meta property="og:image" content="https://map.cardroid.pe/map-preview.gif" />
     <meta property="og:image:type" content="image/gif" />
@@ -217,10 +217,11 @@
         
         <button class="btn" onclick="goMaps()">🧭 Iniciar Navegación</button>
         
-        <button class="btn btn-call" onclick="copyPhone()">
-            📞 Copiar Número
+        <!-- Botón que cambia según el entorno -->
+        <a href="tel:+51932426069" class="btn btn-call" id="phoneBtn">
+            📞 Llamar Ahora
             <span class="phone-number">932 426 069</span>
-        </button>
+        </a>
         
         <p class="info">Abriendo Google Maps GPS...</p>
     </div>
@@ -228,6 +229,12 @@
     <script>
         let count = 3;
         let timer = null;
+        
+        // Detectar navegadores que bloquean tel:
+        function isFacebookBrowser() {
+            const ua = navigator.userAgent || navigator.vendor || window.opera;
+            return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1) || (ua.indexOf("FB_IAB") > -1) || (ua.indexOf("Instagram") > -1);
+        }
         
         function goMaps() {
             if (timer) clearInterval(timer);
@@ -244,14 +251,12 @@
             
             // Intenta copiar al portapapeles
             if (navigator.clipboard && navigator.clipboard.writeText) {
-                // API moderna
                 navigator.clipboard.writeText(phoneNumber).then(function() {
                     showCopiedAlert();
                 }).catch(function() {
                     fallbackCopy(phoneNumber);
                 });
             } else {
-                // Fallback para navegadores antiguos
                 fallbackCopy(phoneNumber);
             }
         }
@@ -268,7 +273,7 @@
                 document.execCommand('copy');
                 showCopiedAlert();
             } catch (err) {
-                alert('Número: ' + text + '\n\nCopia este número para llamar');
+                alert('📞 Número para llamar:\n\n' + text);
             }
             
             document.body.removeChild(textarea);
@@ -295,7 +300,29 @@
             }, 1000);
         }
         
-        window.onload = startCount;
+        // Configurar botón según el entorno
+        function setupPhoneButton() {
+            const phoneBtn = document.getElementById('phoneBtn');
+            
+            if (isFacebookBrowser()) {
+                // En Facebook: cambiar a botón de copiar
+                phoneBtn.removeAttribute('href');
+                phoneBtn.style.cursor = 'pointer';
+                phoneBtn.innerHTML = '📞 Copiar Número<span class="phone-number">932 426 069</span>';
+                phoneBtn.onclick = function(e) {
+                    e.preventDefault();
+                    copyPhone();
+                };
+            } else {
+                // En navegador normal: mantener link tel:
+                phoneBtn.onclick = null;
+            }
+        }
+        
+        window.onload = function() {
+            setupPhoneButton();
+            startCount();
+        };
     </script>
     
     <!-- Vercel Analytics -->
